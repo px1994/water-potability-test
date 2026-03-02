@@ -1,0 +1,85 @@
+import os
+import numpy as np
+import pandas as pd
+import pickle
+
+from sklearn.ensemble import RandomForestClassifier
+
+import yaml
+
+def load_param(params_path:str) -> int:
+    try:
+        with open(params_path,'r') as file:
+            params = yaml.safe_load(file)
+        return params['model_building']['n_estimators']
+    except Exception as e:
+        raise Exception()
+
+#n_estimator = yaml.safe_load(open('params.yaml'))['model_building']['n_estimators']
+
+def load_data(filepath: str) -> pd.DataFrame:
+    try:
+        return pd.read_csv(filepath)
+    except Exception as e:
+        raise Exception(f'Error loading data from {filepath}:{e}')
+    
+
+#train_data = pd.read_csv('./data/processed/train_processed.csv')
+
+# X_train = train_data.iloc[:,0:-1].values
+# y_train = train_data.iloc[:,-1].values
+
+def prepare_data(data: pd.DataFrame) -> tuple[pd.DataFrame,pd.Series]:
+    try:
+        X = data.drop(columns=['Potability'])
+        y = data['Potability']
+        return X,y
+    except Exception as e:
+        raise Exception(f'')
+
+
+#X_train = train_data.drop(columns=['Potability'])
+#y_train = train_data['Potability']
+
+def train_model(X: pd.DataFrame, y: pd.Series, n_estimator: int) -> RandomForestClassifier:
+    try: 
+        clf = RandomForestClassifier(n_estimators=n_estimator)
+        clf.fit(X,y)
+        return clf
+    except Exception as e:
+        raise Exception(f'Error Training Model:{e}')
+    
+
+#clf = RandomForestClassifier(n_estimators=n_estimator)
+#clf.fit(X_train,y_train)
+
+def save_model(model: RandomForestClassifier, model_name: str) -> None:
+    try:
+        with open(model_name,'wb') as file:
+            pickle.dump(model, file)
+    except Exception as e:
+        raise Exception(f'Error saving model{model_name}:{e}')
+
+
+# pickle.dump(clf, open('model.pkl','wb'))
+
+def main():
+    try:
+        params_path  = 'params.yaml'
+        data_path = './data/processed/train_processed.csv' # file path from data processed 
+        model_path = './model.pkl'
+
+        n_estimators = load_param(params_path)
+        train_data = load_data(data_path)
+        X_train, y_train = prepare_data(train_data)
+
+        model = train_model(X_train, y_train, n_estimators)
+        save_model(model, model_path)
+    except Exception as e:
+        raise Exception(f'An Error Occured {e}')
+
+
+if __name__=='__main__':
+    main()
+
+
