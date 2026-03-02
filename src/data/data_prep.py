@@ -8,8 +8,6 @@ def load_data(filepath: str):
     except Exception as e:
         raise Exception(f'Error loading data from{filepath}:{e}')
     
-#train_data = pd.read_csv('./data/raw/train.csv')
-#test_data = pd.read_csv('./data/raw/test.csv')
 
 def fill_missing_with_median(df):
     try:
@@ -43,16 +41,6 @@ def main():
     save_data(train_processed_data, os.path.join(processed_data_path,'train_processed.csv'))
     save_data(test_processed_data, os.path.join(processed_data_path,'test_processed.csv'))
 
-
-#train_processed_data = fill_missing_with_median(train_data)
-#test_processed_data = fill_missing_with_median(test_data)
-
-
-#data_path = os.path.join('data','processed')
-#os.makedirs(data_path)
-
-#train_processed_data.to_csv(os.path.join(data_path,'train_processed.csv'),index=False)
-#test_processed_data.to_csv(os.path.join(data_path,'test_processed.csv'),index=False)
 
 if __name__ == '__main__':
     main()

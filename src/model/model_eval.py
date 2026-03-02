@@ -7,15 +7,14 @@ import json
 
 from sklearn.metrics import accuracy_score,precision_score,recall_score,f1_score
 
-#test_data = pd.read_csv('./data/processed/test_processed.csv')
+
 def load_data(filepath: str) -> pd.DataFrame:
     try:    
         return pd.read_csv(filepath)
     except Exception as e:
         raise Exception(f'Error loading data from {filepath}: {e}')
 
-#X_test = test_data.iloc[:,0:-1].valuesS
-#y_test = test_data.iloc[:,-1].values
+
 
 def prepare_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     try:
@@ -25,7 +24,7 @@ def prepare_data(data: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     except Exception as e:
         raise Exception(f'Error preparing Data:{e}')
     
-#model = pickle.load(open('model.pkl','rb'))
+
 
 def load_model(filepath: str):
     try:
@@ -52,17 +51,17 @@ def evaluation_model(model, x_test:pd.DataFrame, y_test:pd.Series) -> dict:
     
 def save_metrics(metric_dict, filepath:str) -> None:
     try: 
-        with open('metrics.json','w') as file:
+        with open('reports/metrics.json','w') as file:
             json.dump(metric_dict,file,indent=4)
     except Exception as e:
         raise Exception(f'Error saving metrics to {filepath}:{e}')
 
 def main():
+    test_data_path = './data/processed/test_processed.csv'
+    model_path = 'models/model.pkl'
+    metrics_path = 'reports/metrics.json'
+    
     try:
-        test_data_path = './data/processed/test_processed.csv'
-        model_path = 'model.pkl'
-        metrics_path = 'metrics.json'
-
         test_data = load_data(test_data_path)
         x_test, y_test = prepare_data(test_data)
         model = load_model(model_path)

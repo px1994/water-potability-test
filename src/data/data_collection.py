@@ -17,17 +17,13 @@ def load_params(filepath: str) -> float:
         raise Exception(f'Error loading parameter from {filepath}:{e}')
 
 
-#test_size = yaml.safe_load(open('params.yaml'))['data_collection']['test_size']
-#random_state = yaml.safe_load(open('params.yaml'))['data_collection']['random_state']
-
-
 def load_data(filepath: str) -> pd.DataFrame:
     try: 
         return pd.read_csv(filepath)
     except Exception as e:
         raise Exception(f'Error loading Data from {filepath}:{e}')
 
-#data = pd.read_csv('c:/Data/project_datasets/water_potability.csv')
+
 
 def split_data(data: pd.DataFrame,test_size: float, seed: int) -> tuple[pd.DataFrame,pd.DataFrame]:
     try:
@@ -36,7 +32,7 @@ def split_data(data: pd.DataFrame,test_size: float, seed: int) -> tuple[pd.DataF
         raise ValueError(f'Error splitting data {e}')
     
 
-#train_data,test_data = train_test_split(data,test_size=test_size,random_state=random_state)
+
 
 def save_data(df: pd.DataFrame, filepath: str) -> None:
     try:
@@ -44,9 +40,6 @@ def save_data(df: pd.DataFrame, filepath: str) -> None:
     except Exception as e:
         raise Exception(f'Error saving data to {filepath}: {e}')
     
-
-#train_data.to_csv(os.path.join(data_path,'train.csv'),index=False)
-#test_data.to_csv(os.path.join(data_path,'test.csv'),index=False)
 
 
 def main():   
@@ -65,8 +58,7 @@ def main():
     except Exception as e:
         raise Exception(f'An Error Occured:{e}') 
 
-#data_path = os.path.join('data','raw')
-#os.makedirs(data_path)
+
 
 if __name__ == '__main__':
     main()

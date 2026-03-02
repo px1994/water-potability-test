@@ -15,7 +15,7 @@ def load_param(params_path:str) -> int:
     except Exception as e:
         raise Exception()
 
-#n_estimator = yaml.safe_load(open('params.yaml'))['model_building']['n_estimators']
+
 
 def load_data(filepath: str) -> pd.DataFrame:
     try:
@@ -24,10 +24,7 @@ def load_data(filepath: str) -> pd.DataFrame:
         raise Exception(f'Error loading data from {filepath}:{e}')
     
 
-#train_data = pd.read_csv('./data/processed/train_processed.csv')
 
-# X_train = train_data.iloc[:,0:-1].values
-# y_train = train_data.iloc[:,-1].values
 
 def prepare_data(data: pd.DataFrame) -> tuple[pd.DataFrame,pd.Series]:
     try:
@@ -38,8 +35,7 @@ def prepare_data(data: pd.DataFrame) -> tuple[pd.DataFrame,pd.Series]:
         raise Exception(f'')
 
 
-#X_train = train_data.drop(columns=['Potability'])
-#y_train = train_data['Potability']
+
 
 def train_model(X: pd.DataFrame, y: pd.Series, n_estimator: int) -> RandomForestClassifier:
     try: 
@@ -50,8 +46,7 @@ def train_model(X: pd.DataFrame, y: pd.Series, n_estimator: int) -> RandomForest
         raise Exception(f'Error Training Model:{e}')
     
 
-#clf = RandomForestClassifier(n_estimators=n_estimator)
-#clf.fit(X_train,y_train)
+
 
 def save_model(model: RandomForestClassifier, model_name: str) -> None:
     try:
@@ -61,13 +56,12 @@ def save_model(model: RandomForestClassifier, model_name: str) -> None:
         raise Exception(f'Error saving model{model_name}:{e}')
 
 
-# pickle.dump(clf, open('model.pkl','wb'))
 
 def main():
     try:
         params_path  = 'params.yaml'
         data_path = './data/processed/train_processed.csv' # file path from data processed 
-        model_path = './model.pkl'
+        model_path = 'models/model.pkl'
 
         n_estimators = load_param(params_path)
         train_data = load_data(data_path)
