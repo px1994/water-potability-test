@@ -6,11 +6,13 @@
 import pandas as pd
 import numpy as np
 
+
 # Visualization
 import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Model Saving
+import os
 import pickle
 
 # MLflow + DagsHub
@@ -58,7 +60,7 @@ mlflow.set_experiment("Experiment 2")
 # LOAD DATASET
 # =========================================================
 
-data_path = pd.read_csv("c:/Data/project_datasets/water_potability.csv")
+data_path = r"c:/Data/project_datasets/water_potability.csv"
 
 data = pd.read_csv(data_path)
 
@@ -172,9 +174,17 @@ with mlflow.start_run(
             # SAVE MODEL
             # =============================================
 
-            model_filename = f"{model_name}.pkl"
+            # Create folder if not exists
+            os.makedirs("models", exist_ok=True)
 
-            with open(model_filename, "wb") as file:
+            # File name
+            model_filename = f"{model_name}_exp2.pkl"
+
+            # Full path
+            model_path = f"models/{model_filename}"
+
+            # Save model
+            with open(model_path, "wb") as file:
                 pickle.dump(model, file)
 
             # =============================================
@@ -270,7 +280,7 @@ with mlflow.start_run(
             # SET TAGS
             # =============================================
 
-            mlflow.set_tag("author", "datathinkers")
+            mlflow.set_tag("author", "pritesh")
 
             mlflow.set_tag(
                 "project",

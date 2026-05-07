@@ -4,6 +4,8 @@
 
 import pandas as pd
 import numpy as np
+
+#Model Saving
 import pickle
 import os
 
@@ -223,7 +225,7 @@ with mlflow.start_run():
     # SET TAGS
     # -----------------------------------------------------
 
-    mlflow.set_tag("author", "datathinkers")
+    mlflow.set_tag("author", "pritesh")
     mlflow.set_tag("model_type", "RandomForest")
 
 print("\n MLflow experiment completed successfully.")

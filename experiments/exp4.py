@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 # Model Saving
+import os
 import pickle
 
 # MLflow + DagsHub
@@ -50,7 +51,7 @@ mlflow.set_experiment("Experiment 4")
 # LOAD DATASET
 # =========================================================
 
-data_path = pd.read_csv("c:/Data/project_datasets/water_potability.csv")
+data_path = r"c:/Data/project_datasets/water_potability.csv"
 
 data = pd.read_csv(data_path)
 
@@ -236,14 +237,14 @@ with mlflow.start_run(
     # SAVE MODEL
     # =====================================================
 
-    with open("model.pkl", "wb") as file:
+    with open("models/model_exp4.pkl", "wb") as file:
         pickle.dump(best_rf, file)
 
     # =====================================================
     # LOAD MODEL
     # =====================================================
 
-    with open("model.pkl", "rb") as file:
+    with open("models/model_exp4.pkl", "rb") as file:
         model = pickle.load(file)
 
     # =====================================================
@@ -346,7 +347,7 @@ with mlflow.start_run(
 
     mlflow.set_tag(
         "author",
-        "datathinkers"
+        "pritesh"
     )
 
     mlflow.set_tag(
@@ -358,5 +359,4 @@ with mlflow.start_run(
 # FINAL MESSAGE
 # =========================================================
 
-print(
-    "\nRandom Forest tuning and MLflow logging completed successfully.")
+print("\n Random Forest tuning and MLflow logging completed successfully.")
