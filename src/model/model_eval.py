@@ -18,10 +18,16 @@ from mlflow.models import infer_signature
 # DAGSHUB TOKEN AUTHENTICATION
 # =========================================================
 
-# Read token from environment variable
 DAGSHUB_TOKEN = os.getenv("DAGSHUB_TOKEN")
+
 if not DAGSHUB_TOKEN:
-    raise EnvironmentError('DAGSHUB_TOKEN Environment variable is not set')
+    raise EnvironmentError("DAGSHUB_TOKEN Environment variable is not set")
+
+os.environ["DAGSHUB_USER_TOKEN"] = DAGSHUB_TOKEN
+
+# MLflow authentication
+os.environ["MLFLOW_TRACKING_USERNAME"] = "pritesh13590"
+os.environ["MLFLOW_TRACKING_PASSWORD"] = DAGSHUB_TOKEN
 
 # =========================================================
 # INITIALIZE DAGSHUB + MLFLOW
@@ -29,27 +35,11 @@ if not DAGSHUB_TOKEN:
 
 dagshub.init(
     repo_owner='pritesh13590',
-    repo_name='water-potability',
+    repo_name='water-potability-test',
     mlflow=True
 )
 
-# =========================================================
-# SET MLFLOW TRACKING URI
-# =========================================================
-
-mlflow.set_tracking_uri(
-    "https://dagshub.com/pritesh13590/water-potability.mlflow"
-)
-
-# =========================================================
-# OPTIONAL: SET MLFLOW AUTH VARIABLES
-# =========================================================
-
-os.environ["MLFLOW_TRACKING_USERNAME"] = DAGSHUB_TOKEN
-os.environ["MLFLOW_TRACKING_PASSWORD"] = DAGSHUB_TOKEN
-
-
-
+mlflow.set_tracking_uri("https://dagshub.com/pritesh13590/water-potability-test.mlflow")
 
 
 

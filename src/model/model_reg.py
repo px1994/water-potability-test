@@ -13,27 +13,31 @@ from mlflow.tracking import MlflowClient
 import dagshub
 
 # =========================================================
+# DAGSHUB TOKEN AUTHENTICATION
+# =========================================================
+
+DAGSHUB_TOKEN = os.getenv("DAGSHUB_TOKEN")
+
+if not DAGSHUB_TOKEN:
+    raise EnvironmentError("DAGSHUB_TOKEN Environment variable is not set")
+
+os.environ["DAGSHUB_USER_TOKEN"] = DAGSHUB_TOKEN
+
+# MLflow authentication
+os.environ["MLFLOW_TRACKING_USERNAME"] = "pritesh13590"
+os.environ["MLFLOW_TRACKING_PASSWORD"] = DAGSHUB_TOKEN
+
+# =========================================================
 # INITIALIZE DAGSHUB + MLFLOW
 # =========================================================
 
 dagshub.init(
     repo_owner='pritesh13590',
-    repo_name='water-potability',
+    repo_name='water-potability-test',
     mlflow=True
 )
 
-# Set tracking URI
-mlflow.set_tracking_uri(
-    "https://dagshub.com/pritesh13590/water-potability.mlflow"
-)
-
-# Set credentials
-os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
-os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
-
-# =========================================================
-# SET EXPERIMENT
-# =========================================================
+mlflow.set_tracking_uri("https://dagshub.com/pritesh13590/water-potability-test.dvc")
 
 mlflow.set_experiment("DVC PIPELINE")
 
