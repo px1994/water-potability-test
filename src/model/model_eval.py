@@ -28,7 +28,7 @@ os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 # Set the experiment name in MLflow
 
-mlflow.set_experiment("DVC PIPELINE ")
+mlflow.set_experiment("water-potability-exp")
 
 
 
