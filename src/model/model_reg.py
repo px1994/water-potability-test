@@ -3,6 +3,7 @@
 # =========================================================
 
 import json
+import os
 
 # MLflow
 import mlflow
@@ -15,38 +16,45 @@ import dagshub
 # INITIALIZE DAGSHUB + MLFLOW
 # =========================================================
 
-dagshub.init(repo_owner='pritesh13590', 
-             repo_name='water-potability', 
-             mlflow=True)
+dagshub.init(
+    repo_owner='pritesh13590',
+    repo_name='water-potability',
+    mlflow=True
+)
 
-# Set MLflow tracking URI
-mlflow.set_tracking_uri("https://dagshub.com/pritesh13590/water-potability.mlflow")
+# Set tracking URI
+mlflow.set_tracking_uri(
+    "https://dagshub.com/pritesh13590/water-potability.mlflow"
+)
 
-
-# Set MLflow Experiment
-mlflow.set_experiment("Final_Model")
+# Set credentials
+os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("MLFLOW_TRACKING_USERNAME")
+os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
 # =========================================================
-# LOAD RUN INFORMATION
+# SET EXPERIMENT
+# =========================================================
+
+mlflow.set_experiment("DVC PIPELINE")
+
+# =========================================================
+# LOAD RUN INFO
 # =========================================================
 
 reports_path = "reports/run_info.json"
 
-with open(reports_path, "r") as file:
+try:
+    with open(reports_path, "r") as file:
+        run_info = json.load(file)
 
-    run_info = json.load(file)
+    run_id = run_info["run_id"]
+    model_name = run_info["model_name"]
 
+    print(f"Run ID: {run_id}")
+    print(f"Model Name: {model_name}")
 
-# Extract details
-run_id = run_info.get("run_id")
-
-model_name = run_info.get("model_name")
-
-print(run_info)
-
-print("Run ID     :", run_id)
-
-print("Model Name :", model_name)
+except Exception as e:
+    raise Exception(f"Error loading run info: {e}")
 
 # =========================================================
 # CREATE MLFLOW CLIENT
@@ -55,53 +63,77 @@ print("Model Name :", model_name)
 client = MlflowClient()
 
 # =========================================================
+# VERIFY ARTIFACT EXISTS
+# =========================================================
+
+try:
+    artifacts = client.list_artifacts(run_id)
+
+    artifact_paths = [artifact.path for artifact in artifacts]
+
+    print("\nAvailable Artifacts:")
+    print(artifact_paths)
+
+    if model_name not in artifact_paths:
+        raise Exception(
+            f"Model artifact '{model_name}' not found "
+            f"inside run '{run_id}'"
+        )
+
+except Exception as e:
+    raise Exception(f"Error checking artifacts: {e}")
+
+# =========================================================
 # CREATE MODEL URI
 # =========================================================
 
-model_uri = f"runs:/{run_id}/artifacts/{model_name}"
+# IMPORTANT:
+# Do NOT add 'artifacts/' manually
 
-print("Model URI:", model_uri)
+model_uri = f"runs:/{run_id}/{model_name}"
+
+print(f"\nModel URI: {model_uri}")
 
 # =========================================================
 # REGISTER MODEL
 # =========================================================
 
-registered_model = mlflow.register_model(
-    model_uri=model_uri,
-    name=model_name
-)
+try:
+    registered_model = mlflow.register_model(
+        model_uri=model_uri,
+        name=model_name
+    )
+
+    model_version = registered_model.version
+
+    print(
+        f"\nModel Registered Successfully!"
+        f"\nModel Name: {model_name}"
+        f"\nVersion: {model_version}"
+    )
+
+except Exception as e:
+    raise Exception(f"Error registering model: {e}")
 
 # =========================================================
-# GET MODEL VERSION
-# =========================================================
-
-model_version = registered_model.version
-
-print("Registered Model Version:", model_version)
-
-# =========================================================
-# TRANSITION MODEL STAGE
+# TRANSITION MODEL TO STAGING
 # =========================================================
 
 new_stage = "Staging"
 
-client.transition_model_version_stage(
+try:
+    client.transition_model_version_stage(
+        name=model_name,
+        version=model_version,
+        stage=new_stage,
+        archive_existing_versions=True
+    )
 
-    name=model_name,
+    print(
+        f"\nModel '{model_name}' "
+        f"version {model_version} "
+        f"transitioned to '{new_stage}' stage."
+    )
 
-    version=model_version,
-
-    stage=new_stage,
-
-    archive_existing_versions=True
-)
-
-# =========================================================
-# FINAL MESSAGE
-# =========================================================
-
-print(
-    f"\nModel '{model_name}' "
-    f"Version {model_version} "
-    f"transitioned to '{new_stage}' stage successfully."
-)
+except Exception as e:
+    raise Exception(f"Error transitioning model stage: {e}")
