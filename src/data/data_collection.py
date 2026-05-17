@@ -43,7 +43,7 @@ def save_data(df: pd.DataFrame, filepath: str) -> None:
 
 
 def main():   
-    data_filepath = r'c:/Data/project_datasets/water_potability.csv' # data path 
+    data_filepath = r"data/data/water_potability.csv" # data path 
     params_filepath = 'params.yaml' # params file location 
     raw_data_path = os.path.join('data','raw') # save data location
     try:
